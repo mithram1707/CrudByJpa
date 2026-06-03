@@ -1,37 +1,81 @@
 package com.example.CrudByJpa.Controller;
 
+import com.example.CrudByJpa.model.Student;
+import com.example.CrudByJpa.service.StudentService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import com.example.CrudByJpa.model.Student;
-import com.example.CrudByJpa.repository.StudentRepository;
-
 @RestController
 public class StudentController {
 
     @Autowired
-    StudentRepository repository;
+    StudentService service;
 
     @GetMapping("/student")
     public List<Student> getAllStudents() {
-        return repository.findAll();
+        return service.getAllStudents();
     }
 
     @PostMapping("/student")
-    public Student addStudent(@RequestBody Student std) {
-        return repository.save(std);
+    public String addStudent(
+
+            @Valid
+            @RequestBody Student std
+
+    ){
+        service.addStudent(std);
+        return "Student Added Successfully";
     }
+
     @PutMapping("/student")
-    public Student updateStudent(@RequestBody Student std){
-        return repository.save(std);
+    public String updateStudent(
+
+            @Valid
+            @RequestBody Student std
+
+    ){
+        service.updateStudent(std);
+        return "Updated Successfully";
     }
 
     @DeleteMapping("/student/{rollno}")
-    public String deleteStudent(@PathVariable int rollno){
-        repository.deleteById(rollno);
+    public String deleteStudent(
+            @PathVariable int rollno
+    ){
+        service.deleteStudent(rollno);
         return "Deleted Successfully";
     }
 
+    // Derived Query
+    @GetMapping("/student/custom")
+    public List<Student> getStudentByGenderAndTech(
+
+            @RequestParam String gender,
+            @RequestParam String tech
+
+    ){
+        return service.getStudentByGenderAndTech(
+                gender,
+                tech
+        );
+    }
+
+    // Native Query
+    @GetMapping("/student/filter")
+    public List<Student> filterStudents(
+
+            @RequestParam String gender,
+            @RequestParam String tech
+
+    ){
+        return service.filterStudents(
+                gender,
+                tech
+        );
+    }
 }
