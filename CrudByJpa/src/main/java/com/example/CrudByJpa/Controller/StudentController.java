@@ -2,6 +2,7 @@ package com.example.CrudByJpa.Controller;
 
 import com.example.CrudByJpa.model.Student;
 import com.example.CrudByJpa.service.StudentService;
+import org.springframework.data.domain.Page;
 
 import jakarta.validation.Valid;
 
@@ -76,6 +77,18 @@ public class StudentController {
         return service.filterStudents(
                 gender,
                 tech
+        );
+    }
+    @GetMapping("/student/page")
+    public Page<Student> getStudentsWithPagination(
+
+            @RequestParam int page,
+            @RequestParam int size
+
+    ){
+        return service.getStudentsWithPagination(
+                page,
+                size
         );
     }
 }
